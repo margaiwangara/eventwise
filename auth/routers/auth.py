@@ -3,7 +3,7 @@ from models.user import RegisterUserRequest, LoginUserRequest, User
 from passlib.context import CryptContext
 from models.connect import DB_DEPENDENCY
 from starlette import status
-from utils.auth import authenticate_user, create_access_token
+from utils.auth import authenticate_user, create_access_token, get_current_user
 from config import settings
 from datetime import timedelta, datetime
 
@@ -14,6 +14,8 @@ router = APIRouter(
 
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+ACCESS_TOKEN_COOKIE_KEY = "access_token"
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
@@ -39,7 +41,7 @@ def register_user(response: Response, user: RegisterUserRequest, db: DB_DEPENDEN
     token = create_access_token(new_user.email, new_user.id, timedelta(
         weeks=settings.JWT_EXPIRY_DURATION_IN_WEEKS))
 
-    response.set_cookie(key="access_token",
+    response.set_cookie(key=ACCESS_TOKEN_COOKIE_KEY,
                         value=f"Bearer {token}", httponly=True, expires=60*60*24*28)
 
     return {
@@ -60,7 +62,7 @@ def login_user(response: Response, user: LoginUserRequest, db: DB_DEPENDENCY):
     token = create_access_token(authed_user.email, authed_user.id, timedelta(
         weeks=settings.JWT_EXPIRY_DURATION_IN_WEEKS))
 
-    response.set_cookie(key="access_token",
+    response.set_cookie(key=ACCESS_TOKEN_COOKIE_KEY,
                         value=f"Bearer {token}", httponly=True, expires=60*60*24*28)
 
     return {
@@ -69,6 +71,6 @@ def login_user(response: Response, user: LoginUserRequest, db: DB_DEPENDENCY):
     }
 
 
-@router.get("/current-user")
-def current_user():
-    return {"message": "Current User"}
+@router.get("/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout_user(response: Response):
+    response.delete_cookie(ACCESS_TOKEN_COOKIE_KEY)
