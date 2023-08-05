@@ -15,3 +15,11 @@ build:
         manual:
           - src: './**/*.py'
             dest: .
+    - image: margaiwangara/eventwise-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
