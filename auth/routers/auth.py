@@ -1,8 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from models.user import RegisterUserRequest, LoginUserRequest, User
 from passlib.context import CryptContext
 from models.connect import DB_DEPENDENCY
 from starlette import status
+from utils.auth import authenticate_user, create_access_token
+from config import settings
+from datetime import timedelta
 
 router = APIRouter(
     prefix="/auth",
@@ -34,6 +37,26 @@ def register_user(user: RegisterUserRequest, db: DB_DEPENDENCY):
     db.commit()
 
     return new_user
+
+
+@router.post("/login", status_code=status.HTTP_200_OK)
+def login_user(response: Response, user: LoginUserRequest, db: DB_DEPENDENCY):
+    authed_user = authenticate_user(user.email, user.password, db)
+
+    if not authed_user:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,
+                            "Invalid email or password")
+
+    token = create_access_token(authed_user.email, authed_user.id, timedelta(
+        weeks=settings.JWT_EXPIRY_DURATION_IN_WEEKS))
+
+    response.set_cookie(key="access_token",
+                        value=f"Bearer {token}", httponly=True, expires=60*60*24*28)
+
+    return {
+        "access_token": token,
+        "token_type": "Bearer"
+    }
 
 
 @router.get("/current-user")
