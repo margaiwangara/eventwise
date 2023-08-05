@@ -5,7 +5,7 @@ from models.connect import DB_DEPENDENCY
 from starlette import status
 from utils.auth import authenticate_user, create_access_token
 from config import settings
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 router = APIRouter(
     prefix="/auth",
@@ -17,7 +17,7 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-def register_user(user: RegisterUserRequest, db: DB_DEPENDENCY):
+def register_user(response: Response, user: RegisterUserRequest, db: DB_DEPENDENCY):
     hashed_password = bcrypt_context.hash(user.password)
 
     # check if email exists
@@ -36,7 +36,17 @@ def register_user(user: RegisterUserRequest, db: DB_DEPENDENCY):
     db.add(new_user)
     db.commit()
 
-    return new_user
+    token = create_access_token(new_user.email, new_user.id, timedelta(
+        weeks=settings.JWT_EXPIRY_DURATION_IN_WEEKS))
+
+    response.set_cookie(key="access_token",
+                        value=f"Bearer {token}", httponly=True, expires=60*60*24*28)
+
+    return {
+        "id": new_user.id,
+        "name": new_user.name,
+        "email": new_user.email,
+    }
 
 
 @router.post("/login", status_code=status.HTTP_200_OK)
