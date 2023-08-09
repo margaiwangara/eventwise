@@ -9,7 +9,8 @@ Homepage.getInitialProps = async ({ req }: NextPageContext) => {
   try {
     const data = await buildClient({
       req,
-      url: `${process.env.INGRESS_NGINX_BASE_PATH}/api/auth/current-user`,
+      serverUrl: `${process.env.INGRESS_NGINX_BASE_PATH}/api/auth/current-user`,
+      clientUrl: '/api/auth/current-user',
       method: 'get',
     });
 

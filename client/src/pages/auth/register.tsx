@@ -32,43 +32,53 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <h3>Register</h3>
-      {errors && <CustomAlert type="danger" data={errors} />}
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="name"
-          name="name"
-          value={values.name}
-          onChange={onChange}
-        />
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-md-6 offset-md-3">
+          <div className="card">
+            <div className="card-body">
+              <form onSubmit={onSubmit}>
+                <h3>Register</h3>
+                {errors && <CustomAlert type="danger" data={errors} />}
+                <div className="form-group">
+                  <label htmlFor="name">Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
+                    name="name"
+                    value={values.name}
+                    onChange={onChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">Email address</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    name="email"
+                    value={values.email}
+                    onChange={onChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    name="password"
+                    value={values.password}
+                    onChange={onChange}
+                  />
+                </div>
+                <button className="btn btn-primary mt-2">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="form-group">
-        <label htmlFor="email">Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          id="email"
-          name="email"
-          value={values.email}
-          onChange={onChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          className="form-control"
-          id="password"
-          name="password"
-          value={values.password}
-          onChange={onChange}
-        />
-      </div>
-      <button className="btn btn-primary">Submit</button>
-    </form>
+    </div>
   );
 }

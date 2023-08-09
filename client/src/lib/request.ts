@@ -21,25 +21,27 @@ export function apiRequest(
 }
 
 type BuildClientProps = {
-  url: string;
+  clientUrl: string;
+  serverUrl: string;
   method: Method;
   data?: any;
 } & Pick<NextPageContext, 'req'>;
 
 export async function buildClient({
   req,
-  url,
+  clientUrl,
+  serverUrl,
   method,
   data: requestData,
 }: BuildClientProps) {
   if (typeof window === 'undefined') {
-    const data = await apiRequest(method, url, requestData, {
+    const data = await apiRequest(method, serverUrl, requestData, {
       headers: req.headers,
     });
 
     return data;
   } else {
-    const data = await apiRequest(method, url, requestData);
+    const data = await apiRequest(method, clientUrl, requestData);
 
     return data;
   }
