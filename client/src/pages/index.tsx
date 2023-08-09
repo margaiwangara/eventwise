@@ -2,7 +2,7 @@ import { buildClient } from '@/lib/request';
 import { NextPageContext } from 'next';
 
 export default function Homepage(props) {
-  return <div>{props.currentUser ? 'signed in' : 'signed out'}</div>;
+  return <div>{props?.currentUser ? 'signed in' : 'signed out'}</div>;
 }
 
 Homepage.getInitialProps = async ({ req }: NextPageContext) => {
@@ -18,7 +18,8 @@ Homepage.getInitialProps = async ({ req }: NextPageContext) => {
       currentUser: data,
     };
   } catch (error) {
-    console.log('fetch initial props error', error);
-    return {};
+    return {
+      currentUser: null,
+    };
   }
 };
