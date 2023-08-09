@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, Float
+from sqlalchemy import Column, String, Integer, DateTime, Float, ForeignKey
 from database import Base
 from sqlalchemy.sql import func
 from pydantic import BaseModel, Field
@@ -9,11 +9,12 @@ class Ticket(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String)
-    price = Column(Float, default=0.00, )
+    price = Column(Float, default=0.00)
+    user_id = Column(Integer)
     created_at = Column(DateTime, default=func.now())
 
 
-class CreateTicketRequest(BaseModel):
+class TicketRequest(BaseModel):
     title: str = Field(min_length=5)
     price: float = Field(gt=0)
 

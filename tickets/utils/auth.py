@@ -1,6 +1,8 @@
 from config import settings
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from jose import jwt, JWTError
+from config import settings
+from starlette import status
 
 
 def get_current_user(token: str):
@@ -20,3 +22,18 @@ def get_current_user(token: str):
     except JWTError as e:
         print(e)
         raise HTTPException(401, "Unauthorized access")
+
+
+def require_auth(request: Request):
+    token = request.cookies.get(settings.ACCESS_TOKEN_COOKIE_KEY)
+
+    if token is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,
+                            "Unauthorized access")
+
+    user = get_current_user(token.split(' ')[1])
+
+    if user is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,
+                            "Unauthorized access")
+    return user

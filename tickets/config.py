@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     DB_NAME: str
     JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_COOKIE_KEY: str = "access_token"
+    JWT_SECRET: str
+    JWT_EXPIRY_DURATION_IN_WEEKS: int = 4
 
     class Config:
         env_file = ".env"
