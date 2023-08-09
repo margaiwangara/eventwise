@@ -1,4 +1,5 @@
 import axios, { Method, AxiosRequestConfig } from 'axios';
+import { NextPageContext } from 'next';
 
 export function apiRequest(
   method: Method,
@@ -15,6 +16,31 @@ export function apiRequest(
       ...config,
     })
       .then((res) => resolve(res.data))
-      .catch((error) => reject(error.response.data));
+      .catch((error) => reject(error?.response?.data));
   });
+}
+
+type BuildClientProps = {
+  url: string;
+  method: Method;
+  data?: any;
+} & Pick<NextPageContext, 'req'>;
+
+export async function buildClient({
+  req,
+  url,
+  method,
+  data: requestData,
+}: BuildClientProps) {
+  if (typeof window === 'undefined') {
+    const data = await apiRequest(method, url, requestData, {
+      headers: req.headers,
+    });
+
+    return data;
+  } else {
+    const data = await apiRequest(method, url, requestData);
+
+    return data;
+  }
 }
