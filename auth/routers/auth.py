@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response, Request
 from models.user import RegisterUserRequest, LoginUserRequest, User
 from passlib.context import CryptContext
 from models.connect import DB_DEPENDENCY
 from starlette import status
-from utils.auth import authenticate_user, create_access_token, get_current_user
+from utils.auth import authenticate_user, create_access_token, get_current_user, USER_DEPENDENCY
 from config import settings
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 router = APIRouter(
     prefix="/auth",
@@ -74,3 +74,31 @@ def login_user(response: Response, user: LoginUserRequest, db: DB_DEPENDENCY):
 @router.get("/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout_user(response: Response):
     response.delete_cookie(ACCESS_TOKEN_COOKIE_KEY)
+
+
+@router.get("/current-user", status_code=status.HTTP_200_OK)
+def current_user(request: Request, db: DB_DEPENDENCY):
+    token = request.cookies.get(ACCESS_TOKEN_COOKIE_KEY)
+
+    if token is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,
+                            "Unauthorized access")
+
+    user = get_current_user(token.split(' ')[1])
+
+    if user is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,
+                            "Unauthorized access")
+
+    fetch_user = db.query(User).filter(User.id == user.get("id")).first()
+
+    if fetch_user is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Not found")
+
+    return {
+        "id": fetch_user.id,
+        "name": fetch_user.name,
+        "email": fetch_user.email,
+        "is_confirmed": fetch_user.is_confirmed,
+        "created_at": fetch_user.created_at
+    }
