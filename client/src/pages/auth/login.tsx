@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { apiRequest } from '@lib/request';
-import CustomAlert from '@components/CustomAlert';
+import CustomAlert from '@/components/custom-alert';
 import { useRouter } from 'next/router';
 
 export default function Login() {

@@ -1,11 +1,20 @@
 import 'bootstrap/dist/css/bootstrap.css';
 
 import { buildClient } from '@lib/request';
+import Header from '@components/header';
 
 import { AppProps, AppContext } from 'next/app';
+import { UserProps } from '@/app-types/user';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  const { currentUser } = pageProps as { currentUser: UserProps };
+
+  return (
+    <main>
+      <Header currentUser={currentUser} />
+      <Component {...pageProps} />
+    </main>
+  );
 }
 
 MyApp.getInitialProps = async ({ ctx, Component }: AppContext) => {
