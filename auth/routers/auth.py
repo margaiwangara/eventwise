@@ -3,7 +3,7 @@ from models.user import RegisterUserRequest, LoginUserRequest, User
 from passlib.context import CryptContext
 from models.connect import DB_DEPENDENCY
 from starlette import status
-from utils.auth import authenticate_user, create_access_token, get_current_user, USER_DEPENDENCY
+from utils.auth import authenticate_user, create_access_token, get_current_user
 from config import settings
 from datetime import timedelta
 
