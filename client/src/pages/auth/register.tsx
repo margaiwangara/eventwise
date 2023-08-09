@@ -35,7 +35,7 @@ export default function Register() {
     <div className="container mt-5">
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <div className="card">
+          <div className="card text-white bg-dark">
             <div className="card-body">
               <form onSubmit={onSubmit}>
                 <h3>Register</h3>

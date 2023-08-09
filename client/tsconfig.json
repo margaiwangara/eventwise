@@ -20,7 +20,8 @@
       "@pages/*": ["./src/pages/*"],
       "@lib/*": ["./src/lib/*"],
       "@utils/*": ["./src/utils/*"],
-      "@app-types/*": ["./src/app-types/*"]
+      "@app-types/*": ["./src/app-types/*"],
+      "@assets/*": ["./src/assets/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

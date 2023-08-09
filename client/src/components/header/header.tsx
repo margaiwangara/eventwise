@@ -10,7 +10,10 @@ type HeaderProps = {
 export default function Header({ currentUser }: HeaderProps) {
   return (
     <header>
-      <nav className="navbar sticky-top navbar-expand-lg bg-body-tertiary">
+      <nav
+        className="navbar sticky-top navbar-expand-lg bg-dark"
+        data-bs-theme="dark"
+      >
         <div className="container-fluid">
           <Link href="/">
             <a className="navbar-brand">EventWise</a>

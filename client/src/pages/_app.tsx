@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import '@assets/css/bootstrap.css';
 
 import { buildClient } from '@lib/request';
 import Header from '@components/header';
