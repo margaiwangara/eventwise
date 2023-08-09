@@ -41,7 +41,9 @@ MyApp.getInitialProps = async ({ ctx, Component }: AppContext) => {
     };
   } catch (error) {
     return {
-      currentUser: null,
+      pageProps: {
+        currentUser: null,
+      },
     };
   }
 };
