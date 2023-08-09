@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-postgres-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tickets-postgres
+  template:
+    metadata:
+      labels:
+        app: tickets-postgres
+    spec:
+      containers:
+        - name: tickets-postgres
+          image: postgres:15-alpine
+          env:
+            - name: POSTGRES_USER
+              value: johndoe
+            - name: POSTGRES_PASSWORD
+              value: JohnDoe123
+            - name: POSTGRES_DB
+              value: tickets-eventwise
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tickets-postgres-srv
+spec:
+  selector:
+    app: tickets-postgres
+  ports:
+    - name: db
+      protocol: TCP
+      port: 5432
+      targetPort: 5432

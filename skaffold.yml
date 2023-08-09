@@ -23,3 +23,11 @@ build:
         manual:
           - src: 'src/**/*.tsx'
             dest: .
+    - image: margaiwangara/eventwise-tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: './**/*.py'
+            dest: .
